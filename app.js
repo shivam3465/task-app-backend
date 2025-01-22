@@ -3,7 +3,12 @@ import express, { urlencoded } from "express";
 import cors from "cors";
 
 import { mainErrorHandlerService } from "./src/core/service/core.main.error.handler.service.js";
-import authRouter from "./src/auth/routers/user.js"
+
+import authRouter from "./src/auth/routes/auth.routes.js";
+import taskRouter from "./src/user/routes/user.task.routes.js";
+import socialPostRouter from "./src/user/routes/user.social.post.routes.js";
+
+import { authenticatedRoute } from "./src/auth/middleware/auth.middleware.js";
 
 const app = express();
 app.use(
@@ -21,6 +26,10 @@ app.use(cookieParser());
 
 // routes
 app.use("/api/v1/auth", authRouter);
+
+//**************************    Authenticated Routes   ***************************
+app.use("/api/v1/task", authenticatedRoute, taskRouter);
+app.use("/api/v1/post", authenticatedRoute, socialPostRouter);
 
 app.use("/", mainErrorHandlerService);
 

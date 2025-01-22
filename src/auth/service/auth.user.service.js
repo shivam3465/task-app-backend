@@ -14,12 +14,12 @@ const userLoginService = asyncErrorLogger(async (userData) => {
 		.select("+password")
 		.lean();
 
-	//duplicate user check
+	//if user not found
 	if (!user) {
 		return {
 			response: null,
 			error: new CoreResponseError({
-				message: AuthConfig.USER_NOT_FOUND,
+				message: AuthConfig.RESPONSE_MESSAGE.USER_NOT_FOUND,
 				statusCode: 401,
 			}),
 		};
@@ -31,7 +31,7 @@ const userLoginService = asyncErrorLogger(async (userData) => {
 		return {
 			response: null,
 			error: new CoreResponseError({
-				message: AuthConfig.WRONG_CREDENTIALS,
+				message: AuthConfig.RESPONSE_MESSAGE.WRONG_CREDENTIALS,
 				statusCode: 401,
 			}),
 		};
@@ -48,7 +48,7 @@ const userLoginService = asyncErrorLogger(async (userData) => {
 	return {
 		response: {
 			success: true,
-			message: AuthConfig.LOGIN_SUCCESS,
+			message: AuthConfig.RESPONSE_MESSAGE.LOGIN_SUCCESS,
 		},
 		error: null,
 		cookieObj,
@@ -64,7 +64,7 @@ const registerUserService = asyncErrorLogger(async (userData) => {
 		return {
 			response: null,
 			error: new CoreResponseError({
-				message: AuthConfig.DUPLICATE_USER,
+				message: AuthConfig.RESPONSE_MESSAGE.DUPLICATE_USER,
 				statusCode: 400,
 			}),
 		};
@@ -85,7 +85,7 @@ const registerUserService = asyncErrorLogger(async (userData) => {
 	return {
 		response: {
 			success: true,
-			message: AuthConfig.REGISTER_SUCCESS_MESSAGE,
+			message: AuthConfig.RESPONSE_MESSAGE.REGISTER_SUCCESS_MESSAGE,
 		},
 		error: null,
 	};
@@ -99,7 +99,7 @@ const validateUserEmailAndSendOtp = asyncErrorLogger(async (email) => {
 		return {
 			response: null,
 			error: new CoreResponseError({
-				message: AuthConfig.USER_NOT_FOUND,
+				message: AuthConfig.RESPONSE_MESSAGE.USER_NOT_FOUND,
 				statusCode: 401,
 			}),
 		};
@@ -124,7 +124,7 @@ const validateUserEmailAndSendOtp = asyncErrorLogger(async (email) => {
 	return {
 		response: {
 			success: true,
-			message: AuthConfig.OTP_SENT_SUCCESS,
+			message: AuthConfig.RESPONSE_MESSAGE.OTP_SENT_SUCCESS,
 		},
 		error: null,
 	};
@@ -140,7 +140,7 @@ const validateOtpOfUser = asyncErrorLogger(async (email, otp, password) => {
 		return {
 			response: null,
 			error: new CoreResponseError({
-				message: AuthConfig.USER_NOT_FOUND,
+				message: AuthConfig.RESPONSE_MESSAGE.USER_NOT_FOUND,
 				statusCode: 401,
 			}),
 		};
@@ -151,7 +151,7 @@ const validateOtpOfUser = asyncErrorLogger(async (email, otp, password) => {
 		return {
 			response: null,
 			error: new CoreResponseError({
-				message: AuthConfig.OTP_MISMATCHED,
+				message: AuthConfig.RESPONSE_MESSAGE.OTP_MISMATCHED,
 				statusCode: 400,
 			}),
 		};
@@ -170,7 +170,7 @@ const validateOtpOfUser = asyncErrorLogger(async (email, otp, password) => {
 	return {
 		response: {
 			success: true,
-			message: AuthConfig.PASSWORD_RESET_SUCCESS,
+			message: AuthConfig.RESPONSE_MESSAGE.PASSWORD_RESET_SUCCESS,
 		},
 		error: null,
 	};
@@ -186,7 +186,7 @@ const logoutUserService = asyncErrorLogger(async () => {
 	return {
 		response: {
 			success: true,
-			message: AuthConfig.LOGOUT_SUCCESS,
+			message: AuthConfig.RESPONSE_MESSAGE.LOGOUT_SUCCESS,
 		},
 		error: null,
 		cookieObj,

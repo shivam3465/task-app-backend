@@ -11,8 +11,9 @@ const taskDataSchema = new mongoose.Schema(
 			required: true,
 		},
 		status: {
-			type: Boolean,
-			default: false,
+			type: String,
+			enum: ["Pending", "Ongoing", "Completed"], // Allowed values
+			default: "Pending", // Default value
 			required: true,
 		},
 		//stores user Id for this task
