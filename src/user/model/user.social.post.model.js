@@ -21,4 +21,4 @@ const postDataSchema = new mongoose.Schema(
 	{ timestamps: true } // for storing createdAt and updatedAt time
 );
 
-export const PostCollection = mongoose.model("post", postDataSchema);
+export const SocialPostCollection = mongoose.model("post", postDataSchema);

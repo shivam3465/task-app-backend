@@ -55,7 +55,7 @@ const getAllTaskService = asyncErrorLogger(async (taskData) => {
 		response: {
 			success: true,
 			message: UserTaskConfig.RESPONSE_MESSAGE.TASK_FOUND_SUCCESSFULLY,
-			tasks: taskObj,
+			data: taskObj,
 		},
 		error: null,
 	};
@@ -73,10 +73,13 @@ const updateTaskService = asyncErrorLogger(async (taskData) => {
 
 	// Handle case when the updated task is not found
 	if (!updatedTask) {
-		throw new CoreResponseError({
-			message: UserTaskConfig.RESPONSE_MESSAGE.UPDATE_FAILED,
-			statusCode: 404,
-		});
+		return {
+			response: null,
+			error: new CoreResponseError({
+				message: UserTaskConfig.RESPONSE_MESSAGE.UPDATE_FAILED,
+				statusCode: 404,
+			}),
+		};
 	}
 
 	return {
@@ -97,13 +100,15 @@ const deleteTaskService = asyncErrorLogger(async (taskData) => {
 		userId: userId,
 	});
 
-	console.log("del", deletedTask);
 	// Handle case when the task is not found
 	if (!deletedTask) {
-		throw new CoreResponseError({
-			message: UserTaskConfig.RESPONSE_MESSAGE.TASK_DELETE_FAILED,
-			statusCode: 404,
-		});
+		return {
+			response: null,
+			error: new CoreResponseError({
+				message: UserTaskConfig.RESPONSE_MESSAGE.TASK_DELETE_FAILED,
+				statusCode: 404,
+			}),
+		};
 	}
 
 	return {
