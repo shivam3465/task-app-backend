@@ -57,11 +57,7 @@ const createNewSocialPostController = asyncErrorLogger(
 );
 
 const getAllSocialPostController = asyncErrorLogger(async (req, res, next) => {
-	const { user } = req; //coming from auth middleware
-
-	const { response, error } = await getAllSocialPostService({
-		userId: user._id,
-	});
+	const { response, error } = await getAllSocialPostService();
 	if (error) return next(error);
 
 	return sendJsonResponse(res, response, 200);
