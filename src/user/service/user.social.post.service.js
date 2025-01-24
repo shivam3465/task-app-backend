@@ -27,7 +27,7 @@ const createNewSocialPostService = asyncErrorLogger(
 
 const getAllSocialPostService = asyncErrorLogger(async () => {
 	// Fetch all social post for the user with user details
-	const socialPost = await SocialPostCollection.find().populate("userId");
+	const socialPost = await SocialPostCollection.find().populate("userId").sort({ updatedAt: -1 });
 
 	return {
 		response: {
