@@ -11,7 +11,7 @@ import { sendJsonResponse } from "../../common/service/common.send.response.serv
 import { UserTaskConfig } from "../config/user.task.config.js";
 
 const createNewTaskController = asyncErrorLogger(async (req, res, next) => {
-	const { title, desc } = req.body;
+	const { title, desc, status } = req.body;
 	const { user } = req; //coming from auth middleware
 
 	if (!title || !desc || !user._id) {
@@ -27,6 +27,7 @@ const createNewTaskController = asyncErrorLogger(async (req, res, next) => {
 	const { response, error } = await createNewTaskService({
 		title,
 		desc,
+		status,
 		userId: user._id,
 	});
 	if (error) return next(error);
@@ -34,7 +35,7 @@ const createNewTaskController = asyncErrorLogger(async (req, res, next) => {
 	return sendJsonResponse(res, response, 200);
 });
 
-const getAllTaskController = async (req, res) => {
+const getAllTaskController = asyncErrorLogger(async (req, res, next) => {
 	const { user } = req; //coming from auth middleware
 
 	const { response, error } = await getAllTaskService({
@@ -43,7 +44,7 @@ const getAllTaskController = async (req, res) => {
 	if (error) return next(error);
 
 	return sendJsonResponse(res, response, 200);
-};
+});
 
 const updateTaskController = asyncErrorLogger(async (req, res, next) => {
 	const { taskId, title, description, status } = req.body;
@@ -52,18 +53,22 @@ const updateTaskController = asyncErrorLogger(async (req, res, next) => {
 
 	// Validate required fields
 	if (!taskId || !userId) {
-		throw new CoreResponseError({
-			message: UserTaskConfig.RESPONSE_MESSAGE.TASK_NOT_FOUND,
-			statusCode: 400,
-		});
+		return next(
+			new CoreResponseError({
+				message: UserTaskConfig.RESPONSE_MESSAGE.TASK_NOT_FOUND,
+				statusCode: 400,
+			})
+		);
 	}
 
 	// Validate status if provided
 	if (status && !UserTaskConfig.VALID_TASK_STATUS.includes(status)) {
-		throw new CoreResponseError({
-			message: UserTaskConfig.RESPONSE_MESSAGE.INVALID_UPDATE_FIELDS,
-			statusCode: 400,
-		});
+		return next(
+			new CoreResponseError({
+				message: UserTaskConfig.RESPONSE_MESSAGE.INVALID_UPDATE_FIELDS,
+				statusCode: 400,
+			})
+		);
 	}
 
 	// Dynamically build the update object
@@ -74,10 +79,12 @@ const updateTaskController = asyncErrorLogger(async (req, res, next) => {
 
 	// Ensure there are fields to update
 	if (Object.keys(updateFields).length === 0) {
-		throw new CoreResponseError({
-			message: UserTaskConfig.RESPONSE_MESSAGE.INVALID_UPDATE_FIELDS,
-			statusCode: 400,
-		});
+		return next(
+			new CoreResponseError({
+				message: UserTaskConfig.RESPONSE_MESSAGE.INVALID_UPDATE_FIELDS,
+				statusCode: 400,
+			})
+		);
 	}
 
 	const { response, error } = await updateTaskService({
@@ -90,17 +97,19 @@ const updateTaskController = asyncErrorLogger(async (req, res, next) => {
 	return sendJsonResponse(res, response, 200);
 });
 
-const deleteTaskController = asyncErrorLogger(async (req, res) => {
+const deleteTaskController = asyncErrorLogger(async (req, res, next) => {
 	const { taskId } = req.body;
 	const { user } = req; //coming from auth middleware
 	const userId = user._id;
 
 	// Validate required fields
 	if (!taskId || !userId) {
-		throw new CoreResponseError({
-			message: UserTaskConfig.RESPONSE_MESSAGE.TASK_NOT_FOUND,
-			statusCode: 400,
-		});
+		return next(
+			new CoreResponseError({
+				message: UserTaskConfig.RESPONSE_MESSAGE.TASK_NOT_FOUND,
+				statusCode: 400,
+			})
+		);
 	}
 
 	const { response, error } = await deleteTaskService({

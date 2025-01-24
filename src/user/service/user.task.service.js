@@ -5,13 +5,13 @@ import { UserTaskConfig } from "../config/user.task.config.js";
 import { TaskCollection } from "../model/user.task.model.js";
 
 const createNewTaskService = asyncErrorLogger(async (taskData) => {
-	const { title, desc, userId } = taskData;
+	const { title, desc, userId, status } = taskData;
 
 	const taskObj = {
 		title,
-		description: desc,
+		desc,
 		userId,
-		status: "Pending",
+		status: status || "Pending",
 	};
 
 	await TaskCollection.create(taskObj);
